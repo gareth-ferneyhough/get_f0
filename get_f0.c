@@ -312,11 +312,12 @@ int main(int ac, char** av)
     }
 
     for (i = vecsize - 1; i >= 0; i--) {
-      *rec_F0 = f0p[i];
-      *rec_pv = vuvp[i];
-      *rec_rms = rms_speech[i];
-      *rec_acp = acpkp[i];
-      // put_fea_rec(fea_rec, ohd, ofile);
+      printf("%f\n", f0p[i]); 
+      /* *rec_F0 = f0p[i]; */
+      /* *rec_pv = vuvp[i]; */
+      /* *rec_rms = rms_speech[i]; */
+      /* *rec_acp = acpkp[i]; */
+      /* put_fea_rec(fea_rec, ohd, ofile); */
     }
 
     if (done)
