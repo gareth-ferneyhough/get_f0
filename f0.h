@@ -23,7 +23,7 @@
 /* f0.h */
 /* Some definitions used by the "Pitch Tracker Software". */
        
-typedef struct f0_params {
+struct F0_params {
 float cand_thresh,	/* only correlation peaks above this are considered */
       lag_weight,	/* degree to which shorter lags are weighted */
       freq_weight,	/* weighting given to F0 trajectory smoothness */
@@ -40,7 +40,7 @@ float cand_thresh,	/* only correlation peaks above this are considered */
       wind_dur;		/* duration of correlation window (sec) */
 int   n_cands,		/* max. # of F0 cands. to consider at each frame */
       conditioning;     /* Specify optional signal pre-conditioning. */
-} F0_params;
+};
 
 /* Possible values returned by the function f0(). */
 #define F0_OK		0
@@ -62,7 +62,7 @@ int   n_cands,		/* max. # of F0 cands. to consider at each frame */
 #define F0_PC_DIFF	0x010		/* 1st-order difference */
 
 extern F0_params *new_f0_params();
-extern int atoi(), esps_round(), lpc(), window(), get_window();
+extern int atoi(), esps_round(double flnum), lpc(), window(), get_window();
 extern void get_fast_cands(), a_to_aca(), cross(), crossf(), crossfi(),
            autoc(), durbin();
 

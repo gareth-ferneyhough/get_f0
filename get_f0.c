@@ -26,11 +26,7 @@ static char *sccs_id = "@(#)get_f0.c    1.14    10/21/96        ERL";
 #include <stdlib.h>
 #include <string.h>
 #include <malloc.h>
-/* #include <esps/esps.h> */
-/* #include <esps/range_switch.h> */
-/* #include <esps/fea.h> */
-/* #include <esps/feasd.h> */
-
+#include <vector>
 #include "f0.h"
 
 #define SYNTAX USAGE("get_f0 [-P param_file][-{pr} range][-s range][-S frame_step_samples]\n     [-i frame_step_seconds][-x debug_level] infile outfile")
@@ -39,34 +35,35 @@ char        *ProgName = "get_f0";
 static char *Version = "1.14";
 static char *Date = "10/21/96";
 
-int         debug_level = 0;
+int         debug_level = 1;
 extern void fea_skiprec();
 
-static int check_f0_params();
-static void get_range();
+static int check_f0_params(F0_params *par, double sample_freq);
+//static void get_range();
 
 
 int main(int ac, char** av)
 {
-  //extern char *optarg;
-  // extern int optind, getopt();
-  //  char *get_cmd_line();
+  // Function declerations
+  int dp_f0(float *fdata, int buff_size, int sdstep, double freq,
+            F0_params *par, float **f0p_pt, float **vuvp_pt, float **rms_speech_pt,
+            float **acpkp_pt, int *vecsize, int last_time);
+
+  int init_dp_f0(double freq, F0_params* par, long* buffsize, long* sdstep);
+
   float *fdata;
   char c, *ifname, *ofname, *range = NULL;
   FILE *ifile, *ofile;
-  //  struct header *ihd, *ohd;
-  //  struct feasd *sd_rec;
-  //  struct fea_data *fea_rec;
   short n_cands;
   int done;
   long buff_size, actsize, s_rec, e_rec;
   double sf, start_time, output_starts, frame_rate;
-  F0_params *par, *read_f0_params();
+  F0_params *par;
   char *param_file = NULL;
   float *f0p, *vuvp, *rms_speech, *acpkp;
   double *rec_F0, *rec_pv, *rec_rms, *rec_acp;
   int i, vecsize;
-  int init_dp_f0(), dp_f0(), framestep = -1, rflag = 0,
+  int framestep = -1, rflag = 0,
     sflag = 0, iflag = 0;
 
   long sdstep = 0, total_samps;
@@ -257,7 +254,7 @@ int main(int ac, char** av)
   sf = 44100;
   int segment_length = 441000; // 10 sec
   total_samps = segment_length;
-  fdata = malloc(segment_length * sizeof(float));
+  fdata = (float*)malloc(segment_length * sizeof(float));
   int current_frame = 0;
   // gf
 
@@ -301,6 +298,12 @@ int main(int ac, char** av)
   /* } */
   //
 
+
+  std::vector<double> f0_data;
+  std::vector<double> probability_voicing_data;
+  std::vector<double> rms_speech_data;
+  std::vector<double> acpkp_data;
+
   while (1) {
 
     done = (actsize < buff_size) || (total_samps == buff_size);
@@ -312,11 +315,16 @@ int main(int ac, char** av)
     }
 
     for (i = vecsize - 1; i >= 0; i--) {
-      *rec_F0 = f0p[i];
-      *rec_pv = vuvp[i];
-      *rec_rms = rms_speech[i];
-      *rec_acp = acpkp[i];
-      // put_fea_rec(fea_rec, ohd, ofile);
+      f0_data.push_back(f0p[i]);
+      probability_voicing_data.push_back(vuvp[i]);
+      rms_speech_data.push_back(rms_speech[i]);
+      acpkp_data.push_back(acpkp[i]);
+
+      /* *rec_F0 = f0p[i]; */
+      /* *rec_pv = vuvp[i]; */
+      /* *rec_rms = rms_speech[i]; */
+      /* *rec_acp = acpkp[i]; */
+      /*  put_fea_rec(fea_rec, ohd, ofile); */
     }
 
     if (done)
@@ -339,10 +347,7 @@ int main(int ac, char** av)
  * Return a positive integer if any errors detected, 0 if none.
  */
 
-static int
-check_f0_params(par, sample_freq)
-     F0_params   *par;
-     double      sample_freq;
+static int check_f0_params(F0_params *par, double sample_freq)
 {
   int     error = 0;
   double  dstep;

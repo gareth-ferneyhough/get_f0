@@ -129,9 +129,7 @@ static Stat *get_stationarity();
 
 /*--------------------------------------------------------------------*/
 int
-get_Nframes(buffsize, pad, step)
-    long    buffsize;
-    int     pad, step;
+get_Nframes(long buffsize, int pad, int step)
 {
   if (buffsize < pad)
     return (0);
@@ -291,15 +289,15 @@ int init_dp_f0(double freq, F0_params* par, long* buffsize, long* sdstep)
   
 
 /*--------------------------------------------------------------------*/
-int
-dp_f0(fdata, buff_size, sdstep, freq,
-      par, f0p_pt, vuvp_pt, rms_speech_pt, acpkp_pt, vecsize, last_time)
-    float	*fdata;
-    int		buff_size, sdstep;
-    double	freq;
-    F0_params	*par;		/* analysis control parameters */
-    float	**f0p_pt, **vuvp_pt, **rms_speech_pt, **acpkp_pt;
-    int		*vecsize, last_time;
+int dp_f0(float *fdata, int buff_size, int sdstep, double freq,
+	  F0_params *par, float **f0p_pt, float **vuvp_pt, float **rms_speech_pt, 
+	  float **acpkp_pt, int *vecsize, int last_time)
+    /* float	*fdata; */
+    /* int		buff_size, sdstep; */
+    /* double	freq; */
+    /* F0_params	*par;		/\* analysis control parameters *\/ */
+    /* float	**f0p_pt, **vuvp_pt, **rms_speech_pt, **acpkp_pt; */
+    /* int		*vecsize, last_time; */
 {
   float  maxval, engref, *sta, *rms_ratio, *dsdata, *downsample();
   register float ttemp, ftemp, ft1, ferr, err, errmin;
@@ -636,9 +634,7 @@ dp_f0(fdata, buff_size, sdstep, freq,
 
 
 /*--------------------------------------------------------------------*/
-Frame *
-alloc_frame(nlags, ncands)
-    int     nlags, ncands;
+Frame * alloc_frame(int nlags, int ncands)
 {
   Frame *frm;
   int j;
@@ -674,12 +670,7 @@ alloc_frame(nlags, ncands)
 /*--------------------------------------------------------------------*/
 /* push window stat to stack, and pop the oldest one */
 
-static int
-save_windstat(rho, order, err, rms)
-    float   *rho;
-    int     order;
-    float   err;
-    float   rms;
+static int save_windstat(float *rho, int order, float err, float rms)
 {
     int i,j;
 
@@ -705,11 +696,7 @@ save_windstat(rho, order, err, rms)
 
 /*--------------------------------------------------------------------*/
 static int
-retrieve_windstat(rho, order, err, rms)
-    float   *rho;
-    int     order;
-    float   *err;
-    float   *rms;
+retrieve_windstat(float *rho, int order, float *err, float *rms)
 {
     Windstat wstat;
     int i;
@@ -727,12 +714,9 @@ retrieve_windstat(rho, order, err, rms)
 
 /*--------------------------------------------------------------------*/
 static float
-get_similarity(order, size, pdata, cdata,
-	       rmsa, rms_ratio, pre, stab, w_type, init)
-    int     order, size;
-    float   *pdata, *cdata;
-    float   *rmsa, *rms_ratio, pre, stab;
-    int     w_type, init;
+get_similarity(int order, int size, float *pdata, float *cdata,
+	       float *rmsa, float *rms_ratio, float pre, float stab, 
+	       int w_type, int init)
 {
   float rho3[BIGSORD+1], err3, rms3, rmsd3, b0, t, a2[BIGSORD+1], 
       rho1[BIGSORD+1], a1[BIGSORD+1], b[BIGSORD+1], err1, rms1, rmsd1;
@@ -806,10 +790,8 @@ get_similarity(order, size, pdata, cdata,
 */
 
 static Stat*
-get_stationarity(fdata, freq, buff_size, nframes, frame_step, first_time)
-    float   *fdata;
-    double  freq;
-    int     buff_size, nframes, frame_step, first_time;
+get_stationarity(float *fdata, double freq, int buff_size, 
+		 int nframes, int frame_step, int first_time)
 {
   static Stat *stat;
   static int nframes_old = 0, memsize;
@@ -910,9 +892,7 @@ get_stationarity(fdata, freq, buff_size, nframes, frame_step, first_time)
 /* -------------------------------------------------------------------- */
 /*	Round the argument to the nearest integer.			*/
 
-int
-esps_round(flnum)
-    double  flnum;
+int esps_round(double flnum)
 {
   return((flnum >= 0.0) ? (int)(flnum + 0.5) : (int)(flnum - 0.5));
 }

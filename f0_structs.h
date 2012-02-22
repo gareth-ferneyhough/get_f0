@@ -61,4 +61,4 @@ typedef struct frame_rec{
   struct frame_rec *prev;
 } Frame;
 
-extern   Frame *alloc_frame();
+extern   Frame *alloc_frame(int, int);

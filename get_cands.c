@@ -32,7 +32,7 @@ static char *sccs_id = "@(#)get_cands.c	1.5	9/9/96	ERL";
 #define FALSE 0
 
 static void get_cand(), peak(), do_ffir();
-static int lc_lin_fir(), downsamp();
+static int lc_lin_fir(), downsamp);
 
 /* ----------------------------------------------------------------------- */
 void get_fast_cands(fdata, fdsdata, ind, step, size, dec, start, nlags, engref, maxloc, maxval, cp, peaks, locs, ncand, par)
@@ -214,11 +214,8 @@ static void get_cand(cross,peak,loc,nlags,ncand,cand_thresh)
 /* ----------------------------------------------------------------------- */
 /* buffer-to-buffer downsample operation */
 /* This is STRICTLY a decimator! (no upsample) */
-static int downsamp(in, out, samples, outsamps, state_idx, decimate, ncoef, fc, init)
-     float *in, *out;
-     int samples, *outsamps, decimate, ncoef, state_idx;
-     float fc[];
-     int init;
+static int downsamp(float *in, float *out, int samples, int *outsamps, int state_idx, 
+		    int decimate, int ncoef, float *fc, int init)
 {
   if(in && out) {
     do_ffir(in, samples, out, outsamps, state_idx, ncoef, fc, 0, decimate, init);
