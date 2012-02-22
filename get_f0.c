@@ -44,22 +44,18 @@ int debug_level = 0;
 
 extern void fea_skiprec();
 static int check_f0_params();
+int init_dp_f0();
+int dp_f0();
 void readFile(const char *filename, double **audio_frames, int* sample_length, double* sample_rate);
 
 int main(int ac, char** av)
 {
-  short n_cands;
   int done;
-  long buff_size, s_rec, e_rec;
-  double start_time, output_starts, frame_rate;
+  long buff_size;
   F0_params *parameters;
   char *param_file = NULL;
   float *f0p, *vuvp, *rms_speech, *acpkp;
-  double *rec_F0, *rec_pv, *rec_rms, *rec_acp;
-  int i, vecsize;
-  int init_dp_f0(), dp_f0(), framestep = -1, rflag = 0,
-    sflag = 0, iflag = 0;
-
+  int vecsize;
   long sdstep = 0;
 
   parameters = (F0_params *) malloc(sizeof(F0_params));
@@ -69,23 +65,16 @@ int main(int ac, char** av)
   parameters->trans_cost = 0.005;
   parameters->trans_amp = 0.5;
   parameters->trans_spec = 0.5;
-  parameters->voice_bias = 0.0;
+  parameters->voice_bias = 0.5;//0.0;
   parameters->double_cost = 0.35;
   parameters->min_f0 = 50;
   parameters->max_f0 = 550;
-  parameters->frame_step = 0.01;
+  parameters->frame_step = 0.01;//0.01;
   parameters->wind_dur = 0.0075;
   parameters->n_cands = 20;
   parameters->mean_f0 = 200;         /* unused */
   parameters->mean_f0_weight = 0.0;  /* unused */
   parameters->conditioning = 0;      /* unused */
-
-  // gf
-  /* sf = 44100; */
-  /* int segment_length = 441000; // 10 sec */
-  /* total_samps = segment_length; */
-  /* fdata = malloc(segment_length * sizeof(float)); */
-  /* int current_frame = 0; */
 
   double *audio_frames;
   double sample_rate;
@@ -95,8 +84,7 @@ int main(int ac, char** av)
   readFile(filename, &audio_frames, &sample_length, &sample_rate);
   int frames_remaining = sample_length;
   printf("Frames remaining: %d\n", frames_remaining);
-  printf("Samplerate: %d\n", sample_rate);
-  // gf
+  printf("Samplerate: %f\n", sample_rate);
 
   if(check_f0_params(parameters, sample_rate)){
     Fprintf(stderr, "%s: invalid/inconsistent parameters -- exiting.\n",
@@ -135,13 +123,13 @@ int main(int ac, char** av)
       exit(1);
     }
 
+    // Save stats for region
+    int i;
     for (i = vecsize - 1; i >= 0; i--) {
-      printf("%f\n", f0p[i]);
-      /* *rec_F0 = f0p[i]; */
-      /* *rec_pv = vuvp[i]; */
-      /* *rec_rms = rms_speech[i]; */
-      /* *rec_acp = acpkp[i]; */
-      /* put_fea_rec(fea_rec, ohd, ofile); */
+      printf("%f",    f0p[i]);
+      printf(",%f",   vuvp[i]);
+      printf(",%f",   rms_speech[i]);
+      printf(",%f\n", acpkp[i]);
     }
 
     if (done)
@@ -244,6 +232,6 @@ void readFile(const char *filename, double **audio_frames, int *sample_length, d
     exit(-1);
   }
 
-  else printf("Read %d frames at %d Hz\n", *sample_length, *sample_rate);
+  else printf("Read %d frames at %f Hz\n", *sample_length, *sample_rate);
 }
 
