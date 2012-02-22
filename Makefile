@@ -12,8 +12,8 @@ get_cands:	get_cands.c
 sigproc:	sigproc.c
 	gcc -c -g sigproc.c
 
-pitch_track:
-	gcc -g -o pitch_track *.o -lm
+pitch_track: get_f0 dp_f0 get_cands sigproc
+	gcc -g -o pitch_track *.o -lm -lsndfile
 
 clean:
 	rm *.o pitch_track
