@@ -36,11 +36,11 @@ static char *sccs_id = "@(#)get_f0.c    1.14    10/21/96        ERL";
 
 #define SYNTAX USAGE("get_f0 [-P param_file][-{pr} range][-s range][-S frame_step_samples]\n     [-i frame_step_seconds][-x debug_level] infile outfile")
 
-char        *ProgName = "get_f0";
+//char        *ProgName = "get_f0";
 static char *Version = "2.0";
 static char *Date = "2/22/12";
 
-int debug_level = 0;
+//int debug_level = 0;
 
 extern void fea_skiprec();
 static int check_f0_params();

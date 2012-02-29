@@ -1,2 +1,7 @@
 *.o
+*.a
+*.wav
+results/*
+out
 pitch_track
+f0_test

@@ -61,13 +61,9 @@ static char *sccs_id = "@(#)dp_f0.c	1.14	10/21/96	ERL";
 #include <limits.h>
 #include <math.h>
 #include <malloc.h>
-//#include <esps/esps.h>
 #include <stdlib.h>
 #include "f0.h"
 #include "f0_structs.h"
-
-extern int  debug_level;
-extern char *ProgName;
   
 /*
  * READ_SIZE: length of input data frame in sec to read
