@@ -14,7 +14,7 @@
 #include <sndfile.h>
 #include "getf0.h"
 
-void readFile(const char *filename, float **audio_frames, int* sample_length, double* sample_rate);
+void readFile(const char *filename, double **audio_frames, int* sample_length, double* sample_rate);
 
 int main(int argc, char** argv)
 {
@@ -45,7 +45,7 @@ int main(int argc, char** argv)
   parameters->mean_f0_weight = 0.0;  /* unused */
   parameters->conditioning = 0;      /* unused */
 
-  float *audio_frames;
+  double *audio_frames;
   double sample_rate;
   int sample_length;
   const char *filename = "in.wav";
@@ -84,7 +84,7 @@ int main(int argc, char** argv)
   while (1) {
     done = (actsize < buff_size) || (frames_remaining == buff_size);
 
-    if (dp_f0(&audio_frames[current_frame], actsize, (int) sdstep, sample_rate, parameters,
+    if (dp_f0((float*)&audio_frames[current_frame], actsize, (int) sdstep, sample_rate, parameters,
               &f0p, &vuvp, &rms_speech, &acpkp, &vecsize, done)) {
       fprintf(stderr, "problem in dp_f0().\n");
       exit(1);
@@ -113,7 +113,7 @@ int main(int argc, char** argv)
 
 
 // Read input file with libsndfile
-void readFile(const char *filename, float **audio_frames, int *sample_length, double *sample_rate)
+void readFile(const char *filename, double **audio_frames, int *sample_length, double *sample_rate)
 {
   SNDFILE *infile;
   SF_INFO sfinfo;
@@ -136,8 +136,8 @@ void readFile(const char *filename, float **audio_frames, int *sample_length, do
   *sample_length = sfinfo.frames;
   *sample_rate = (double)sfinfo.samplerate;
 
-  (*audio_frames) = (float*)malloc(*sample_length * sizeof(float));
-  int readcount = sf_readf_float(infile, (*audio_frames), *sample_length);
+  (*audio_frames) = (double*)malloc(*sample_length * sizeof(double));
+  int readcount = sf_readf_double(infile, (*audio_frames), *sample_length);
 
   if (readcount != *sample_length){
     printf("Error reading sound file\n");
