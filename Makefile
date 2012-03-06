@@ -12,9 +12,6 @@ get_cands.o:	get_cands.c
 sigproc.o:	sigproc.c
 	gcc -c -g sigproc.c
 
-#pitch_track: get_f0.o dp_f0.o get_cands.o sigproc.o 
-#	gcc -g -o pitch_track *.o -lm -lsndfile
-
 libgetf0.a:	dp_f0.o get_cands.o sigproc.o check_params.o
 	ar rcs libgetf0.a dp_f0.o get_cands.o sigproc.o check_params.o
 
@@ -25,4 +22,4 @@ f0_test:	get_f0_test.cpp
 	g++ -o f0_test get_f0_test.cpp -L . -lgetf0 -lsndfile -lm
 
 clean:
-	rm *.o *.a
+	rm *.o *.a f0_test
