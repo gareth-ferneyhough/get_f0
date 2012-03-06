@@ -1,3 +1,6 @@
+#ifndef F0_H_
+#define F0_H_
+
 /*
  * This material contains unpublished, proprietary software of 
  * Entropic Research Laboratory, Inc. Any reproduction, distribution, 
@@ -71,3 +74,8 @@ extern void get_fast_cands(), a_to_aca(), cross(), crossf(), crossfi(),
 // gf
 #define TRUE 1
 #define FALSE 0
+
+static int  debug_level = 0;
+static char *ProgName = "get_f0";
+
+#endif
