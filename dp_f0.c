@@ -137,7 +137,7 @@ get_Nframes(buffsize, pad, step)
 
 
 /*--------------------------------------------------------------------*/
-int init_dp_f0(double freq, F0_params* par, long* buffsize, long* sdstep)
+int init_dp_f0(double freq, F0_params* par, int* buffsize, int* sdstep)
 {
   int nframes;
   int i;

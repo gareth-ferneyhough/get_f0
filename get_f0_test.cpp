@@ -19,12 +19,12 @@ void readFile(const char *filename, double **audio_frames, int* sample_length, d
 int main(int argc, char** argv)
 {
   int done;
-  long buff_size;
+  int buff_size;
   F0_params *parameters;
   char *param_file = NULL;
   float *f0p, *vuvp, *rms_speech, *acpkp;
   int vecsize;
-  long sdstep = 0;
+  int sdstep = 0;
 
   // Set parameters
   parameters = (F0_params *) malloc(sizeof(F0_params));
@@ -110,7 +110,6 @@ int main(int argc, char** argv)
   }
   exit(0);
 }
-
 
 // Read input file with libsndfile
 void readFile(const char *filename, double **audio_frames, int *sample_length, double *sample_rate)

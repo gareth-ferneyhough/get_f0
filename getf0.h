@@ -21,7 +21,7 @@ int   n_cands,		/* max. # of F0 cands. to consider at each frame */
 extern "C" {
 #endif
 
-  extern int init_dp_f0(double freq, F0_params* par, long* buffsize, long* sdstep);
+  extern int init_dp_f0(double freq, F0_params* par, int* buffsize, int* sdstep);
   extern int dp_f0(float* fdata, int buff_size, int sdstep, double freq, 
 		   F0_params* par, float** f0p_pt, float** vuvp_pt, float** rms_speech_pt, 
 		   float** acpkp_pt, int* vecsize, int last_time);
